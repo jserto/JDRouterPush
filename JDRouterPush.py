@@ -228,27 +228,27 @@ def resultDisplay():
         if satisfiedTimes != "":
             point_infos = point_infos + "\n    - 累计在线：" + \
                           str(satisfiedTimes) + "天"
-        point_infos = point_infos + "\n    - 当前网速：" + pointInfo["speed"] \
-                      + "\n    - 当前IP：" + pointInfo["wanip"] \
-                      + "\n    - 当前模式：" + pointInfo["model"] \
-                      + "\n    - 固件版本：" + pointInfo["rom"] \
-                      + "\n    - 插件状态：" + pointInfo["status"] \
-                      + "\n    - 插件版本：" + pointInfo["nickname"] \
-                      + "\n    - 缓存大小：" + pointInfo["cache_size"] \
-                      + "\n    - 在线时间：" + pointInfo["onlineTime"] \
-                      + "\n    - PCDN：" + pointInfo["pcdnname"] \
+        point_infos = point_infos + "\n    - 当前网速：" + pointInfo.get("speed","err") \
+                      + "\n    - 当前IP：" + pointInfo.get("wanip","err") \
+                      + "\n    - 当前模式：" + pointInfo.get("model","err") \
+                      + "\n    - 固件版本：" + pointInfo.get("rom","err") \
+                      + "\n    - 插件状态：" + pointInfo.get("status","err") \
+                      + "\n    - 插件版本：" + pointInfo.get("nickname","err") \
+                      + "\n    - 缓存大小：" + pointInfo.get("cache_size","err") \
+                      + "\n    - 在线时间：" + pointInfo.get("onlineTime","err") \
+                      + "\n    - PCDN：" + pointInfo.get("pcdnname","err") \
                       + "\n    - 最近到期积分：" + str(recentExpireAmount) \
                       + "\n    - 最近到期时间：" + recentExpireTime \
                       + "\n    - 最近" + str(records_num) + "条记录："
         for pointRecord in pointRecords:
-            recordType = pointRecord["recordType"]
+            recordType = pointRecord.get("recordType","err")
             recordType_str = ""
             if recordType == 1:
                 recordType_str = "积分收入："
             else:
                 recordType_str = "积分支出："
-            pointAmount = pointRecord["pointAmount"]
-            createTime = pointRecord["createTime"]
+            pointAmount = pointRecord.get("pointAmount","err")
+            createTime = pointRecord.get("createTime","err")
             point_infos = point_infos + "\n        - " + \
                           createTime + "  " + recordType_str + str(pointAmount)
     notifyContentJson = {"content": content, "date": todayDate, "total_today": today_total_point,
