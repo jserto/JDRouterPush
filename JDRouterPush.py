@@ -132,7 +132,7 @@ def pointOperateRecordsShow(mac):
     params = {
         "source": 1,
         "mac": mac,
-        "pageSize": records_num,
+        "pageSize": GlobalVariable.records_num,
         "currentPage": 1
     }
     point_records = []
@@ -221,34 +221,33 @@ def resultDisplay():
         if pointInfo.get("satisfiedTimes"):
             satisfiedTimes = pointInfo["satisfiedTimes"]
         pointRecords = pointInfo["pointRecords"]
-        point_infos = point_infos + "\n" + "- " + GlobalVariable.device_name.get(str(mac[-6:]), GlobalVariable.device_list[mac]["device_name"]) + "==>" \
+        point_infos +=  "\n" + "- " + GlobalVariable.device_name.get(str(mac[-6:]), GlobalVariable.device_list[mac]["device_name"]) + "==>" \
                       + "\n    - 今日积分：" + str(todayPointIncome) \
                       + "\n    - 可用积分：" + str(amount) \
                       + "\n    - 总收积分：" + str(allPointIncome)
         if satisfiedTimes != "":
-            point_infos = point_infos + "\n    - 累计在线：" + \
-                          str(satisfiedTimes) + "天"
-        point_infos = point_infos + "\n    - 当前网速：" + pointInfo.get("speed","err") \
-                      + "\n    - 当前IP：" + pointInfo.get("wanip","err") \
-                      + "\n    - 当前模式：" + pointInfo.get("model","err") \
-                      + "\n    - 固件版本：" + pointInfo.get("rom","err") \
-                      + "\n    - 插件状态：" + pointInfo.get("status","err") \
-                      + "\n    - 插件版本：" + pointInfo.get("nickname","err") \
-                      + "\n    - 缓存大小：" + pointInfo.get("cache_size","err") \
-                      + "\n    - 在线时间：" + pointInfo.get("onlineTime","err") \
-                      + "\n    - PCDN：" + pointInfo.get("pcdnname","err") \
+            point_infos += "\n    - 累计在线：" + str(satisfiedTimes) + "天"
+        point_infos +=  "\n    - 当前网速：" + pointInfo["speed"] \
+                      + "\n    - 当前IP：" + pointInfo["wanip"] \
+                      + "\n    - 当前模式：" + pointInfo["model"] \
+                      + "\n    - 固件版本：" + pointInfo["rom"]
+        if pointInfo.get("pluginInfo"):
+            point_infos +=  "\n    - 插件状态：" + pointInfo["status"] \
+                          + "\n    - 缓存大小：" + pointInfo["cache_size"] \
+                          + "\n    - PCDN：" + pointInfo["pcdnname"] 
+        point_infos +=  "\n    - 在线时间：" + pointInfo["onlineTime"] \
                       + "\n    - 最近到期积分：" + str(recentExpireAmount) \
                       + "\n    - 最近到期时间：" + recentExpireTime \
-                      + "\n    - 最近" + str(records_num) + "条记录："
+                      + "\n    - 最近" + str(GlobalVariable.records_num) + "条记录："
         for pointRecord in pointRecords:
-            recordType = pointRecord.get("recordType","err")
+            recordType = pointRecord["recordType"]
             recordType_str = ""
             if recordType == 1:
                 recordType_str = "积分收入："
             else:
                 recordType_str = "积分支出："
-            pointAmount = pointRecord.get("pointAmount","err")
-            createTime = pointRecord.get("createTime","err")
+            pointAmount = pointRecord["pointAmount"]
+            createTime = pointRecord["createTime"]
             point_infos = point_infos + "\n        - " + \
                           createTime + "  " + recordType_str + str(pointAmount)
     notifyContentJson = {"content": content, "date": todayDate, "total_today": today_total_point,
@@ -266,7 +265,7 @@ def resultDisplay():
     normalContent = NoticeTemplate.normalTemplate().format(**notifyContentJson)
     NoticePush.telegram_bot(title, normalContent)
     NoticePush.bark(title, normalContent)
-    NoticePush.enterprise_wechat(normalContent)
+    NoticePush.enterprise_wechat(title, normalContent)
 
     # 信息输出测试
     print("标题->", title)
@@ -275,14 +274,13 @@ def resultDisplay():
 
 # 主操作
 def main():
-    global records_num
     if GlobalVariable.WSKEY is None or GlobalVariable.WSKEY.strip() == '':
         print("未获取到环境变量'WSKEY'，执行中止")
         return
     GlobalVariable.headers["wskey"] = GlobalVariable.WSKEY
     GlobalVariable.service_headers["tgt"] = GlobalVariable.WSKEY
     if GlobalVariable.RECORDSNUM.isdigit():
-        records_num = int(GlobalVariable.RECORDSNUM)
+        GlobalVariable.records_num = int(GlobalVariable.RECORDSNUM)
     resolveDeviceName(GlobalVariable.DEVICENAME)
     checkForUpdates()
     todayPointIncome()
