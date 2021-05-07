@@ -109,23 +109,26 @@ def getControlDevice(mac,i):
             control_device = {"rom":rom,"speed":"↑%s   ↓%s"%(upload_str,download_str),"cpu":cpu + "%","onlineTime":calculatingTime(onlineTime),"wanip":wanip,"model":model}
         elif i == 3:
             # 插件版本
-            if isinstance(data,str):
-                print("无法获取插件信息!")
-                print("信息如下:",data)
-                control_device = {"pluginInfo":False}
-            else:
-                pcdn_list = data["pcdn_list"]
-                status = ""
-                name = ""
-                cache_size = ""
-                for pcdn_st in pcdn_list:
-                    status += f'''{pcdn_st["nickname"]}({pcdn_st["status"]})   '''
-                    name += f'''{pcdn_st["nickname"]}({pcdn_st["name"]})   '''
-                    cache_size += f'''{pcdn_st["nickname"]}({str(round(int(pcdn_st["cache_size"])/1048/1000,2))}GB)   '''
-                extstorage_exist = data["extstorage_exist"]
-                extstorage_enable = data["extstorage_enable"]
-                board = data["board"]
-                control_device = {"pluginInfo":True,"status":status,"pcdnname":name,"cache_size":cache_size}
+            try:
+                if isinstance(data,str):
+                    print("无法获取插件信息!")
+                    print("信息如下:",data)
+                    control_device = {"pluginInfo":False}
+                else:
+                    pcdn_list = data["pcdn_list"]
+                    status = ""
+                    name = ""
+                    cache_size = ""
+                    for pcdn_st in pcdn_list:
+                        status += f'''{pcdn_st["nickname"]}({pcdn_st["status"]})   '''
+                        name += f'''{pcdn_st["nickname"]}({pcdn_st["name"]})   '''
+                        cache_size += f'''{pcdn_st["nickname"]}({str(round(int(pcdn_st["cache_size"])/1048/1000,2))}GB)   '''
+                    extstorage_exist = data["extstorage_exist"]
+                    extstorage_enable = data["extstorage_enable"]
+                    board = data["board"]
+                    control_device = {"pluginInfo":True,"status":status,"pcdnname":name,"cache_size":cache_size}
+            except:
+                pass
         
     else:
         control_device = {"pluginInfo": False}
