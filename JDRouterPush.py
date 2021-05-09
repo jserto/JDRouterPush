@@ -210,44 +210,44 @@ def resultDisplay():
     if GlobalVariable.final_result.get("announcement"):
         content = content + "\n> " + GlobalVariable.final_result["announcement"] + " \n\n"
     for pointInfo in pointInfos:
-        mac = pointInfo["mac"]
-        todayPointIncome = pointInfo["todayPointIncome"]
-        allPointIncome = pointInfo["allPointIncome"]
-        amount = pointInfo["amount"]
-        bindAccount = pointInfo["bindAccount"]
-        recentExpireAmount = pointInfo["recentExpireAmount"]
-        recentExpireTime = pointInfo["recentExpireTime"]
+        mac = pointInfo.get('mac', 'err')
+        todayPointIncome = pointInfo.get('todayPointIncome', 'err')
+        allPointIncome = pointInfo.get('allPointIncome', 'err')
+        amount = pointInfo.get('amount', 'err')
+        bindAccount = pointInfo.get('bindAccount', 'err')
+        recentExpireAmount = pointInfo.get('recentExpireAmount', 'err')
+        recentExpireTime = pointInfo.get('recentExpireTime', 'err')
         satisfiedTimes = ""
         if pointInfo.get("satisfiedTimes"):
-            satisfiedTimes = pointInfo["satisfiedTimes"]
-        pointRecords = pointInfo["pointRecords"]
+            satisfiedTimes = pointInfo.get('satisfiedTimes', 'err')
+        pointRecords = pointInfo.get('pointRecords', 'err')
         point_infos +=  "\n" + "- " + GlobalVariable.device_name.get(str(mac[-6:]), GlobalVariable.device_list[mac]["device_name"]) + "==>" \
                       + "\n    - 今日积分：" + str(todayPointIncome) \
                       + "\n    - 可用积分：" + str(amount) \
                       + "\n    - 总收积分：" + str(allPointIncome)
         if satisfiedTimes != "":
             point_infos += "\n    - 累计在线：" + str(satisfiedTimes) + "天"
-        point_infos +=  "\n    - 当前网速：" + pointInfo["speed"] \
-                      + "\n    - 当前IP：" + pointInfo["wanip"] \
-                      + "\n    - 当前模式：" + pointInfo["model"] \
-                      + "\n    - 固件版本：" + pointInfo["rom"]
+        point_infos +=  "\n    - 当前网速：" + pointInfo.get('speed', 'err') \
+                      + "\n    - 当前IP：" + pointInfo.get('wanip', 'err') \
+                      + "\n    - 当前模式：" + pointInfo.get('model', 'err') \
+                      + "\n    - 固件版本：" + pointInfo.get('rom', 'err')
         if pointInfo.get("pluginInfo"):
-            point_infos +=  "\n    - 插件状态：" + pointInfo["status"] \
-                          + "\n    - 缓存大小：" + pointInfo["cache_size"] \
-                          + "\n    - PCDN：" + pointInfo["pcdnname"] 
-        point_infos +=  "\n    - 在线时间：" + pointInfo["onlineTime"] \
+            point_infos +=  "\n    - 插件状态：" + pointInfo.get('status', 'err') \
+                          + "\n    - 缓存大小：" + pointInfo.get('cache_size', 'err') \
+                          + "\n    - PCDN：" + pointInfo.get('pcdnname', 'err') 
+        point_infos +=  "\n    - 在线时间：" + pointInfo.get('onlineTime', 'err') \
                       + "\n    - 最近到期积分：" + str(recentExpireAmount) \
                       + "\n    - 最近到期时间：" + recentExpireTime \
                       + "\n    - 最近" + str(GlobalVariable.records_num) + "条记录："
         for pointRecord in pointRecords:
-            recordType = pointRecord["recordType"]
+            recordType = pointRecord.get('recordType','err')
             recordType_str = ""
             if recordType == 1:
                 recordType_str = "积分收入："
             else:
                 recordType_str = "积分支出："
-            pointAmount = pointRecord["pointAmount"]
-            createTime = pointRecord["createTime"]
+            pointAmount = pointRecord.get('pointAmount','err')
+            createTime = pointRecord.get('createTime','err')
             point_infos = point_infos + "\n        - " + \
                           createTime + "  " + recordType_str + str(pointAmount)
     notifyContentJson = {"content": content, "date": todayDate, "total_today": today_total_point,
