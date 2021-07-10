@@ -9,7 +9,8 @@ jd_service_url = "https://gw.smart.jd.com/f/service/"
 # RequestHeader
 headers = {
     "x-app-id": "996",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "User-Agent": "%E4%BA%AC%E4%B8%9C%E4%BA%91%E6%97%A0%E7%BA%BF%E5%AE%9D/1020 CFNetwork/1240.0.4 Darwin/20.5.0"
 }
 
 accessKey = "b8f9c108c190a39760e1b4e373208af5cd75feb4"
